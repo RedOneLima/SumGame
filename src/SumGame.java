@@ -10,7 +10,7 @@ public class SumGame {
 
     private int[][] dynamicTable;
     private String[][] optimalPath;
-    private int[] gameArray = {3, 1, 7, 5, 8, 4};
+    private int[] gameArray;
     private final char DOWN = '\u2193';
     private final char LEFT = '\u2190';
     private static final String RED = "\u001B[31m";
@@ -23,6 +23,17 @@ public class SumGame {
     }
 
     private SumGame() {
+        int n;
+        Scanner fillArray = new Scanner(System.in);
+        do {
+            System.out.print("How many values would you like to use (even value): ");
+            n = fillArray.nextInt();
+        }while(n %2 != 0);
+        gameArray = new int[n];
+        for(int i = 0; i<n ; i++){
+            System.out.println("Enter value: " + (i+1));
+            gameArray[i] = fillArray.nextInt();
+        }
         dynamicTable = new int[gameArray.length][gameArray.length];
         optimalPath = new String[gameArray.length][gameArray.length];
         first = 0; last = gameArray.length-1;
@@ -84,7 +95,7 @@ public class SumGame {
             System.out.println();
             for(int j=0; j<dynamicTable.length; j++){
                 //Print the divider down the rows
-                if (j==0) System.out.print((i+1)+Character.toString('\u2551')+"\t");
+                if (j==0) System.out.print(gameArray[i]+Character.toString('\u2551')+"\t");
                 //Has a corrisponding arrow
                 if(optimalPath[i][j] != null)
                     if(i == first && j == last)
@@ -119,6 +130,10 @@ public class SumGame {
             System.out.print("\nYour choices are " + gameArray[first] + " and " + gameArray[last] +
                 "\nYour optimal choice for this move is " +optimalMove+": ");
             userSelection = userInput.nextInt();
+                if(userSelection != gameArray[first] && userSelection != gameArray[last]){
+                    System.out.println("You can only pick the first or last elements in the list");
+                    continue;
+                }
 
                 if (userSelection == gameArray[first]) {
                     player1Sum += gameArray[first++];
@@ -146,6 +161,8 @@ public class SumGame {
             }
                 if(player1Sum > player2Sum){
                     System.out.println("Player 1 wins!");
+                }else if(player1Sum == player2Sum) {
+                    System.out.println("Its a TIE!");
                 }else{
                     System.out.println("Computer wins!");
                 }
